@@ -1,37 +1,9 @@
-/*
-Objects:
-- gameboard
-- players
-- gameflow?
-
-Gameboard
-.addMark()
-
-
-Player
-
-
-GameController
-.playRound()
-
-
-ScreenController
-.updateScreen()
-
-
-*/
-
-
-// factory function?
+// factory function
 function Cell() {
   let value = 0;
 
-  // Accept a player's token to change the value of the cell
-  const addToken = (player) => {
-    value = player;
-  };
+  const addToken = (player) => value = player;
 
-  // How we will retrieve the current value of this cell through closure
   const getValue = () => value;
 
   return {
@@ -73,17 +45,21 @@ const Gameboard = (() => {
     console.log(getBoardValues());
   };
 
-  return { getBoard, getBoardValues, addToken, printBoard }
+  return {
+    getBoard,
+    getBoardValues,
+    addToken,
+    printBoard,
+  }
 });
 
-// const game = Gameboard();
-// console.log(game.getBoard());
 
 // module
 const GameController = ((playerOneName = "Player One",
   playerTwoName = "Player Two") => {
 
   const board = Gameboard();
+  let isGameOver = false;
 
   const players = [
     {
@@ -163,6 +139,8 @@ const GameController = ((playerOneName = "Player One",
     console.log(`${getActivePlayer().name} wins!`);
   }
 
+  const getIsGameOver = () => isGameOver;
+
   const playRound = (row, column) => {
     // Check if move is valid first
     const moveValid = board.addToken(row, column, getActivePlayer().token);
@@ -180,11 +158,30 @@ const GameController = ((playerOneName = "Player One",
     if (isWinner) {
       printWinner();
       board.printBoard();
+      isGameOver = true;
+      console.log(getIsGameOver());
     } else {
-      // Switch player turn
       switchPlayerTurn();
       printNewRound();
     }
+  };
+
+  const resetGame = () => {
+    const board = Gameboard();
+    let isGameOver = false;
+
+    const players = [
+      {
+        name: playerOneName,
+        token: 1
+      },
+      {
+        name: playerTwoName,
+        token: 2
+      }
+    ];
+
+    let activePlayer = players[0];
   };
 
   // Initial play game message
@@ -194,7 +191,10 @@ const GameController = ((playerOneName = "Player One",
   // getActivePlayer for the UI version, so I'm revealing it now
   return {
     playRound,
-    getActivePlayer
+    getActivePlayer,
+    getBoard: board.getBoard,
+    getIsGameOver,
+    resetGame,
   };
 });
 
@@ -231,3 +231,65 @@ game.playRound(0, 1);
 game.playRound(2, 0);
 
 // GameController.playRound(1, 1);
+
+const ScreenController = (() => {
+
+  const game = GameController();
+  const playerTurnDiv = document.querySelector('.turn');
+  const boardDiv = document.querySelector('.board');
+  const restartButton = document.querySelector('.restart');
+
+  const updateScreen = () => {
+
+    const activePlayer = game.getActivePlayer();
+
+    if (game.getIsGameOver()) {
+      playerTurnDiv.textContent = `${activePlayer.name} Wins!`;
+    } else {
+      playerTurnDiv.textContent = `${activePlayer.name}'s Turn`;
+    }
+
+    boardDiv.textContent = '';
+    // get the newest version of the board and player turn
+    const board = game.getBoard();
+
+    // Render board squares
+    board.forEach((row, rowIndex) => {
+      row.forEach((cell, colIndex) => {
+        // Anything clickable should be a button!!
+        const cellButton = document.createElement("button");
+        cellButton.classList.add("cell");
+        // Create a data attribute to identify the column
+        // This makes it easier to pass into our `playRound` function 
+        cellButton.dataset.row = rowIndex;
+        cellButton.dataset.column = colIndex;
+        cellButton.textContent = cell.getValue();
+        boardDiv.appendChild(cellButton);
+      })
+    })
+
+
+  };
+
+  function clickBoardHandler(e) {
+    const selectedRow = e.target.dataset.row;
+    const selectedCol = e.target.dataset.column;
+    if (!game.getIsGameOver()) {
+      game.playRound(selectedRow, selectedCol);
+      updateScreen();
+    }
+  };
+
+  function restartHandler() {
+    game.resetGame();
+  }
+
+  boardDiv.addEventListener('click', clickBoardHandler);
+  restartButton.addEventListener('click', restartHandler);
+
+  // Initial render
+  updateScreen();
+
+});
+
+ScreenController();

@@ -1,3 +1,8 @@
+/*
+TODO:
+- draw condition
+*/
+
 // factory function
 function Cell() {
   let value = 0;
@@ -18,12 +23,14 @@ const Gameboard = (() => {
   const columns = 3;
   const board = [];
 
-  for (let i = 0; i < rows; i++) {
-    board[i] = [];
-    for (let j = 0; j < columns; j++) {
-      board[i].push(Cell());
+  const resetBoard = () => {
+    for (let i = 0; i < rows; i++) {
+      board[i] = [];
+      for (let j = 0; j < columns; j++) {
+        board[i].push(Cell());
+      }
     }
-  }
+  };
 
   const getBoard = () => board;
 
@@ -45,11 +52,15 @@ const Gameboard = (() => {
     console.log(getBoardValues());
   };
 
+  // initialize board
+  resetBoard();
+
   return {
     getBoard,
     getBoardValues,
     addToken,
     printBoard,
+    resetBoard,
   }
 });
 
@@ -167,28 +178,14 @@ const GameController = ((playerOneName = "Player One",
   };
 
   const resetGame = () => {
-    const board = Gameboard();
-    let isGameOver = false;
-
-    const players = [
-      {
-        name: playerOneName,
-        token: 1
-      },
-      {
-        name: playerTwoName,
-        token: 2
-      }
-    ];
-
-    let activePlayer = players[0];
+    board.resetBoard();
+    isGameOver = false;
+    activePlayer = players[0];
   };
 
   // Initial play game message
   printNewRound();
 
-  // For the console version, we will only use playRound, but we will need
-  // getActivePlayer for the UI version, so I'm revealing it now
   return {
     playRound,
     getActivePlayer,
@@ -200,6 +197,7 @@ const GameController = ((playerOneName = "Player One",
 
 let game = GameController();
 
+// CONSOLE DEBUGGING
 // 3 in a row
 // game.playRound(1, 1);
 // game.playRound(0, 0);
@@ -230,7 +228,6 @@ game.playRound(1, 1);
 game.playRound(0, 1);
 game.playRound(2, 0);
 
-// GameController.playRound(1, 1);
 
 const ScreenController = (() => {
 
@@ -256,7 +253,7 @@ const ScreenController = (() => {
     // Render board squares
     board.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
-        // Anything clickable should be a button!!
+        // Anything clickable should be a button!
         const cellButton = document.createElement("button");
         cellButton.classList.add("cell");
         // Create a data attribute to identify the column
@@ -282,6 +279,7 @@ const ScreenController = (() => {
 
   function restartHandler() {
     game.resetGame();
+    updateScreen();
   }
 
   boardDiv.addEventListener('click', clickBoardHandler);

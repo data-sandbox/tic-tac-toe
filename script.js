@@ -170,7 +170,6 @@ const GameController = ((playerOneName = "Player One",
       printWinner();
       board.printBoard();
       isGameOver = true;
-      console.log(getIsGameOver());
     } else {
       switchPlayerTurn();
       printNewRound();
@@ -195,9 +194,8 @@ const GameController = ((playerOneName = "Player One",
   };
 });
 
-let game = GameController();
-
 // CONSOLE DEBUGGING
+// let game = GameController();
 // 3 in a row
 // game.playRound(1, 1);
 // game.playRound(0, 0);
@@ -222,11 +220,11 @@ let game = GameController();
 // game.playRound(2, 2);
 
 // diagonal forward slash
-game.playRound(0, 2);
-game.playRound(1, 2);
-game.playRound(1, 1);
-game.playRound(0, 1);
-game.playRound(2, 0);
+// game.playRound(0, 2);
+// game.playRound(1, 2);
+// game.playRound(1, 1);
+// game.playRound(0, 1);
+// game.playRound(2, 0);
 
 
 const ScreenController = (() => {

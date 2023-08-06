@@ -1,3 +1,58 @@
+:root {
+  --maroon: #542437;
+  --teal: #53777A;
+  --red: #C02942;
+  --orange: #D95B43;
+  --yellow: #ECD078;
+  --gray-dark: rgb(43, 43, 43);
+  --gray-light: rgb(112, 112, 112);
+  --white-light: rgb(225, 225, 225);
+  --shadow-color: rgba(17, 17, 17, 0.411);
+}
+
+* {
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  grid-row: 1 / 2;
+  background-color: var(--maroon);
+  color: var(--white-light);
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2rem;
+  z-index: 2;
+  box-shadow: 0 2px 8px 2px var(--shadow-color);
+}
+
+.container,
+footer {
+  background-color: var(--teal);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  z-index: 1;
+}
+
+.container>h2 {
+  color: var(--white-light);
+  padding: 20px;
+}
+
 .board {
   display: grid;
   height: 500px;
@@ -7,7 +62,8 @@
   border: 1px solid black;
   gap: 2px;
   padding: 2px;
-  background-color: lightgray;
+  background-color: var(--gray-light);
+  box-shadow: 0 2px 8px 2px var(--shadow-color);
 }
 
 .cell {
@@ -17,6 +73,42 @@
   text-align: center;
   font-size: 2rem;
   border: 1px solid grey;
-  background: lightyellow;
+  background: var(--yellow);
   cursor: pointer;
+  color: var(--orange);
+  font-size: 6rem;
+}
+
+.button-container {
+  padding: 20px;
+}
+
+button.restart {
+  font-size: 1.2rem;
+  font-weight: 600;
+  background-color: var(--maroon);
+  color: var(--white-light);
+  border: solid 1px var(--maroon);
+  padding: 0.7rem 2rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px 2px var(--shadow-color);
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  padding: 5px;
+  gap: 10px;
+}
+
+img.github {
+  height: 2rem;
+  transition: transform 0.5s ease-in-out;
+}
+
+img.github:hover {
+  transform: rotate(360deg) scale(1.2);
 }

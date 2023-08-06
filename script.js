@@ -5,7 +5,7 @@ TODO:
 
 // factory function
 function Cell() {
-  let value = 0;
+  let value = null;
 
   const addToken = (player) => value = player;
 
@@ -35,7 +35,7 @@ const Gameboard = (() => {
   const getBoard = () => board;
 
   const addToken = (row, column, player) => {
-    if (board[row][column].getValue() !== 0) {
+    if (board[row][column].getValue() !== null) {
       console.log('Move not available. Try again');
       return false;
     }
@@ -75,11 +75,11 @@ const GameController = ((playerOneName = "Player One",
   const players = [
     {
       name: playerOneName,
-      token: 1
+      token: 'X'
     },
     {
       name: playerTwoName,
-      token: 2
+      token: 'O'
     }
   ];
 
